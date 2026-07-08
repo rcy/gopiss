@@ -2,9 +2,8 @@
 
 Get the current urine tank level on the International Space Station.
 
-Connects to [NASA's public ISSLIVE telemetry feed](https://isslive.com) via
-Lightstreamer and returns the latest reading from `NODE3000005` — the urine
-tank sensor.
+Connects to NASA's public ISSLIVE telemetry stream via Lightstreamer and
+returns the latest reading from `NODE3000005` — the urine tank sensor.
 
 ## Install
 
