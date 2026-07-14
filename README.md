@@ -13,6 +13,8 @@ go get github.com/rcy/gopiss@latest
 
 ## Usage
 
+### Get a single reading
+
 ```go
 package main
 
@@ -31,6 +33,32 @@ func main() {
 }
 ```
 
+### Watch for changes
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+
+    "github.com/rcy/gopiss"
+)
+
+func main() {
+    ctx := context.Background()
+    ch, err := gopiss.WatchISSUrineTankLevel(ctx)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    for level := range ch {
+        fmt.Printf("ISS urine tank level: %.1f%%\n", level)
+    }
+}
+```
+
 ## API
 
 ```go
@@ -38,5 +66,15 @@ func GetISSUrineTankLevel() (float64, error)
 ```
 
 Returns the urine tank fill percentage from the latest telemetry snapshot.
-Requires internet access (connects to `push.lightstreamer.com` via WebSocket).
-No authentication needed.
+Connects, reads one value, and closes the connection.
+
+```go
+func WatchISSUrineTankLevel(ctx context.Context) (<-chan float64, error)
+```
+
+Returns a channel that receives the tank level whenever it changes. The
+connection stays open and the background goroutine exits when `ctx` is
+cancelled.
+
+Both functions require internet access (connect to `push.lightstreamer.com`
+via WebSocket). No authentication needed.
